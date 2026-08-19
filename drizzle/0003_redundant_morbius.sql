@@ -1,0 +1,1 @@
+ALTER TABLE "courses" ADD COLUMN "syllabus_url" text;

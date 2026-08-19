@@ -5,8 +5,29 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1787024435281,
-      "tag": "0000_stormy_golden_guardian",
+      "when": 1787096176457,
+      "tag": "0000_skinny_maximus",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1787096187157,
+      "tag": "0001_report_rule_completeness_trigger",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1787097752128,
+      "tag": "0002_lively_thundra",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1787110154859,
+      "tag": "0003_redundant_morbius",
       "breakpoints": true
     }
   ]

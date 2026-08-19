@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import { McpModule } from '@rekog/mcp-nest';
-import { ScraperModule } from '../scraper/scraper.module';
-import { PageTitleScraper } from '../scraper/examples/page-title.scraper';
+import { ScraperModule } from '../scraper';
 import { MCP_SERVER_NAME } from '../mcp-server.config';
 import { EchoTool } from './echo.tool';
-import { PageTitleTool } from './page-title.tool';
+import { CoursesService } from '../courses/courses.service';
+import { GetAllCoursesTool } from './getAllCourses.tool';
 
 /**
  * Home for MCP tool providers. Add new @Tool()-decorated providers here (or
@@ -16,8 +16,8 @@ import { PageTitleTool } from './page-title.tool';
 @Module({
   imports: [
     ScraperModule,
-    McpModule.forFeature([EchoTool, PageTitleTool], MCP_SERVER_NAME),
+    McpModule.forFeature([EchoTool, GetAllCoursesTool], MCP_SERVER_NAME),
   ],
-  providers: [EchoTool, PageTitleTool, PageTitleScraper],
+  providers: [EchoTool, CoursesService, GetAllCoursesTool],
 })
 export class ToolsModule {}

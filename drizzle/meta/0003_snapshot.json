@@ -1,6 +1,6 @@
 {
-  "id": "7fb59199-5c0a-41b7-afcd-27534708a71d",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "f1a9ca89-3b95-4116-83fb-48b02067eb59",
+  "prevId": "8a5aa3f6-aca7-4e6b-bf29-367c7a55324a",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -135,6 +135,24 @@
           "type": "text",
           "primaryKey": false,
           "notNull": true
+        },
+        "name_cs": {
+          "name": "name_cs",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "name_en": {
+          "name": "name_en",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "syllabus_url": {
+          "name": "syllabus_url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
         },
         "created_at": {
           "name": "created_at",

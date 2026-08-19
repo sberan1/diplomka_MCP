@@ -1,6 +1,6 @@
 {
-  "id": "7fb59199-5c0a-41b7-afcd-27534708a71d",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "5c2e6a2c-2f8c-4b61-9460-d4d36735c671",
+  "prevId": "7fb59199-5c0a-41b7-afcd-27534708a71d",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -72,9 +72,9 @@
             }
           ],
           "isUnique": false,
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "concurrently": false
         },
         "course_pages_current_unique_idx": {
           "name": "course_pages_current_unique_idx",
@@ -93,25 +93,25 @@
             }
           ],
           "isUnique": true,
-          "where": "\"course_pages\".\"is_current\" = true",
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "where": "\"course_pages\".\"is_current\" = true",
+          "concurrently": false
         }
       },
       "foreignKeys": {
         "course_pages_course_id_courses_id_fk": {
           "name": "course_pages_course_id_courses_id_fk",
           "tableFrom": "course_pages",
-          "tableTo": "courses",
           "columnsFrom": [
             "course_id"
           ],
+          "tableTo": "courses",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "cascade"
         }
       },
       "compositePrimaryKeys": {},
@@ -150,10 +150,10 @@
       "uniqueConstraints": {
         "courses_code_unique": {
           "name": "courses_code_unique",
-          "nullsNotDistinct": false,
           "columns": [
             "code"
-          ]
+          ],
+          "nullsNotDistinct": false
         }
       },
       "policies": {},
@@ -201,39 +201,39 @@
         "report_rule_evaluations_report_id_reports_id_fk": {
           "name": "report_rule_evaluations_report_id_reports_id_fk",
           "tableFrom": "report_rule_evaluations",
-          "tableTo": "reports",
           "columnsFrom": [
             "report_id"
           ],
+          "tableTo": "reports",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "cascade"
         },
         "report_rule_evaluations_rule_id_rules_id_fk": {
           "name": "report_rule_evaluations_rule_id_rules_id_fk",
           "tableFrom": "report_rule_evaluations",
-          "tableTo": "rules",
           "columnsFrom": [
             "rule_id"
           ],
+          "tableTo": "rules",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "restrict",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "restrict"
         }
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
         "report_rule_evaluations_report_rule_unique": {
           "name": "report_rule_evaluations_report_rule_unique",
-          "nullsNotDistinct": false,
           "columns": [
             "report_id",
             "rule_id"
-          ]
+          ],
+          "nullsNotDistinct": false
         }
       },
       "policies": {},
@@ -275,15 +275,15 @@
         "reports_course_id_courses_id_fk": {
           "name": "reports_course_id_courses_id_fk",
           "tableFrom": "reports",
-          "tableTo": "courses",
           "columnsFrom": [
             "course_id"
           ],
+          "tableTo": "courses",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "cascade"
         }
       },
       "compositePrimaryKeys": {},
@@ -328,10 +328,10 @@
       "uniqueConstraints": {
         "rules_code_unique": {
           "name": "rules_code_unique",
-          "nullsNotDistinct": false,
           "columns": [
             "code"
-          ]
+          ],
+          "nullsNotDistinct": false
         }
       },
       "policies": {},
@@ -369,10 +369,10 @@
     }
   },
   "schemas": {},
+  "views": {},
   "sequences": {},
   "roles": {},
   "policies": {},
-  "views": {},
   "_meta": {
     "columns": {},
     "schemas": {},
