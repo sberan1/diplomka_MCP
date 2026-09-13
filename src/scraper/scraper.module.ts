@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { BrowserService } from './browser.service';
 import { AllCoursesScraper } from './scrapers/allCourses.scraper';
+import { SyllabusScraper } from './scrapers/syllabus.scraper';
 
 /**
  * Puppeteer scaffolding: import this wherever you need a browser, then
@@ -12,7 +13,7 @@ import { AllCoursesScraper } from './scrapers/allCourses.scraper';
  */
 @Module({
   imports: [ConfigModule],
-  providers: [BrowserService, AllCoursesScraper],
-  exports: [BrowserService, AllCoursesScraper],
+  providers: [BrowserService, AllCoursesScraper, SyllabusScraper],
+  exports: [BrowserService, AllCoursesScraper, SyllabusScraper],
 })
 export class ScraperModule {}

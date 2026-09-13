@@ -4,7 +4,13 @@ import { ScraperModule } from '../scraper';
 import { MCP_SERVER_NAME } from '../mcp-server.config';
 import { EchoTool } from './echo.tool';
 import { CoursesService } from '../courses/courses.service';
-import { GetAllCoursesTool } from './getAllCourses.tool';
+import { SyllabusService } from '../courses/syllabus.service';
+import { ReportsService } from '../courses/reports.service';
+import { RulesService } from '../rules/rules.service';
+import { GetAllCoursesTool } from './courses/getAllCourses.tool';
+import { RefreshSyllabusTool } from './courses/refreshSyllabus.tool';
+import { SubmitEvaluationTool } from './courses/submitEvaluation.tool';
+import { GetRulesTool } from './rules/getRules.tool';
 
 /**
  * Home for MCP tool providers. Add new @Tool()-decorated providers here (or
@@ -16,8 +22,27 @@ import { GetAllCoursesTool } from './getAllCourses.tool';
 @Module({
   imports: [
     ScraperModule,
-    McpModule.forFeature([EchoTool, GetAllCoursesTool], MCP_SERVER_NAME),
+    McpModule.forFeature(
+      [
+        EchoTool,
+        GetAllCoursesTool,
+        RefreshSyllabusTool,
+        SubmitEvaluationTool,
+        GetRulesTool,
+      ],
+      MCP_SERVER_NAME,
+    ),
   ],
-  providers: [EchoTool, CoursesService, GetAllCoursesTool],
+  providers: [
+    EchoTool,
+    CoursesService,
+    SyllabusService,
+    ReportsService,
+    RulesService,
+    GetAllCoursesTool,
+    RefreshSyllabusTool,
+    SubmitEvaluationTool,
+    GetRulesTool,
+  ],
 })
 export class ToolsModule {}

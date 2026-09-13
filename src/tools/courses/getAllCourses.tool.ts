@@ -1,6 +1,6 @@
 import { Tool } from '@rekog/mcp-nest';
 import { Injectable } from '@nestjs/common';
-import { CoursesService } from '../courses/courses.service';
+import { CoursesService } from '../../courses/courses.service';
 
 @Injectable()
 export class GetAllCoursesTool {

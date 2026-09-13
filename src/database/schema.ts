@@ -1,6 +1,5 @@
-import { relations, sql } from 'drizzle-orm';
+import { relations } from 'drizzle-orm';
 import {
-  boolean,
   index,
   integer,
   pgEnum,
@@ -9,7 +8,6 @@ import {
   text,
   timestamp,
   unique,
-  uniqueIndex,
 } from 'drizzle-orm/pg-core';
 
 export const pageLanguage = pgEnum('page_language', ['cs', 'en']);
@@ -39,9 +37,11 @@ export const courses = pgTable('courses', {
 
 /**
  * A captured Czech or English syllabus page for a course. Every capture is
- * kept (archive) - `isCurrent` marks the latest one per (course, language),
- * enforced by a partial unique index so at most one row can be "current" at
- * a time.
+ * kept (archive); the latest capturedAt per (course, language) is the
+ * current one. `contentHash` is the version identity: sha256 over every
+ * content field (see SyllabusService.hashPage), unique - a refresh that
+ * scrapes identical content reuses the existing row instead of storing a
+ * duplicate.
  */
 export const coursePages = pgTable(
   'course_pages',
@@ -51,20 +51,24 @@ export const coursePages = pgTable(
       .notNull()
       .references(() => courses.id, { onDelete: 'cascade' }),
     language: pageLanguage('language').notNull(),
+    contentHash: text('content_hash').notNull().unique(),
     name: text('name').notNull(),
     teachingLanguage: text('teaching_language').notNull(),
     ectsCredits: integer('ects_credits').notNull(),
-    isCurrent: boolean('is_current').notNull().default(true),
+    completionForm: text('completion_form'),
+    teachingForm: text('teaching_form'),
+    aims: text('aims'),
+    learningOutcomes: text('learning_outcomes'),
+    courseContents: text('course_contents'),
+    workloadSummary: text('workload_summary'),
+    assessmentMethods: text('assessment_methods'),
+    specialRequirements: text('special_requirements'),
+    literature: text('literature'),
     capturedAt: timestamp('captured_at', { withTimezone: true })
       .notNull()
       .defaultNow(),
   },
-  (table) => [
-    index('course_pages_course_id_idx').on(table.courseId),
-    uniqueIndex('course_pages_current_unique_idx')
-      .on(table.courseId, table.language)
-      .where(sql`${table.isCurrent} = true`),
-  ],
+  (table) => [index('course_pages_course_id_idx').on(table.courseId)],
 );
 
 /** Master list of validation rules (R1, R2, ...) that reports get scored against. */
@@ -72,15 +76,21 @@ export const rules = pgTable('rules', {
   id: serial('id').primaryKey(),
   code: text('code').notNull().unique(),
   name: text('name').notNull(),
+  /** What to check and how - the instruction an evaluator (human or LLM) follows to produce a result. */
+  description: text('description'),
   type: ruleType('type').notNull(),
 });
 
-/** A validation report submitted by the Copilot agent for a course. */
+/**
+ * A validation report submitted by the Copilot agent for one syllabus
+ * version (the cs coursePages row of a scrape - SyllabusService returns
+ * its id as versionId together with the matching en row).
+ */
 export const reports = pgTable('reports', {
   id: serial('id').primaryKey(),
-  courseId: integer('course_id')
+  versionId: integer('version_id')
     .notNull()
-    .references(() => courses.id, { onDelete: 'cascade' }),
+    .references(() => coursePages.id, { onDelete: 'cascade' }),
   summary: text('summary').notNull(),
   createdAt: timestamp('created_at', { withTimezone: true })
     .notNull()
@@ -117,14 +127,14 @@ export const reportRuleEvaluations = pgTable(
 
 export const coursesRelations = relations(courses, ({ many }) => ({
   pages: many(coursePages),
-  reports: many(reports),
 }));
 
-export const coursePagesRelations = relations(coursePages, ({ one }) => ({
+export const coursePagesRelations = relations(coursePages, ({ one, many }) => ({
   course: one(courses, {
     fields: [coursePages.courseId],
     references: [courses.id],
   }),
+  reports: many(reports),
 }));
 
 export const rulesRelations = relations(rules, ({ many }) => ({
@@ -132,9 +142,9 @@ export const rulesRelations = relations(rules, ({ many }) => ({
 }));
 
 export const reportsRelations = relations(reports, ({ one, many }) => ({
-  course: one(courses, {
-    fields: [reports.courseId],
-    references: [courses.id],
+  version: one(coursePages, {
+    fields: [reports.versionId],
+    references: [coursePages.id],
   }),
   evaluations: many(reportRuleEvaluations),
 }));

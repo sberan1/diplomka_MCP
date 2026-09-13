@@ -144,3 +144,55 @@ export async function getCheckedLabelInGroup(
   }
   return label;
 }
+
+/**
+ * Reads a set of "label: value" fields off an INSIS-style page in one pass,
+ * keyed by whatever keys `labels` uses. Handles both layouts seen on the
+ * syllabus page:
+ * - same-row: `<tr><td><b>Label: </b></td><td>value</td></tr>`
+ * - stacked: `<tr><td colspan="2"><b>Label: </b></td></tr>` followed by a
+ *   separate `<tr><td colspan="2">value</td></tr>` - used for the longer
+ *   free-text sections (aims, learning outcomes, literature, ...).
+ *
+ * Missing fields resolve to null rather than throwing, since not every
+ * syllabus fills in every section (e.g. "special requirements" is often
+ * blank) - callers decide what's actually required.
+ */
+export async function extractLabeledFields<K extends string>(
+  page: Page,
+  labels: Record<K, string>,
+): Promise<Record<K, string | null>> {
+  return page.evaluate(
+    (labelsArg, nbsp) => {
+      const normalize = (s: string) => s.split(nbsp).join(' ').trim();
+      const rows = Array.from(document.querySelectorAll('tr'));
+
+      function findValue(labelText: string): string | null {
+        for (let i = 0; i < rows.length; i++) {
+          const bold = rows[i].querySelector('b');
+          if (!bold) continue;
+          const label = normalize(bold.textContent ?? '').replace(/:$/, '');
+          if (label !== labelText) continue;
+
+          const tds = rows[i].querySelectorAll('td');
+          if (tds.length >= 2) {
+            return (tds[tds.length - 1] as HTMLElement).innerText.trim();
+          }
+          const nextCell = rows[i + 1]?.querySelector(
+            'td',
+          ) as HTMLElement | null;
+          return nextCell ? nextCell.innerText.trim() : null;
+        }
+        return null;
+      }
+
+      const result = {} as Record<string, string | null>;
+      for (const [key, labelText] of Object.entries(labelsArg)) {
+        result[key] = findValue(labelText as string);
+      }
+      return result;
+    },
+    labels,
+    NON_BREAKING_SPACE,
+  ) as Promise<Record<K, string | null>>;
+}

@@ -22,5 +22,7 @@ RUN apk add --no-cache chromium nss freetype harfbuzz ca-certificates ttf-freefo
 COPY package.json package-lock.json ./
 RUN npm ci --omit=dev
 COPY --from=build /app/dist ./dist
+COPY drizzle.config.ts ./
+COPY drizzle ./drizzle
 EXPOSE 3000
 CMD ["node", "dist/main.js"]

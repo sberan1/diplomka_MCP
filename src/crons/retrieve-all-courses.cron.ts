@@ -23,25 +23,18 @@ export class RetrieveAllCoursesCron implements OnApplicationBootstrap {
   ) {}
 
   onApplicationBootstrap() {
-    void this.handleCron();
+    //void this.handleCron();
   }
 
   @Cron(CronExpression.EVERY_QUARTER)
   async handleCron() {
     this.logger.log('Retrieving all courses...');
-    // Year and semester aren't picked here - the scraper always uses
-    // whatever academic year INSIS has checked by default (the current
-    // one) and includes both semesters.
     // TODO: pick real faculty value (or loop over several).
     const { courses } = await this.allCoursesScraper.run({
       faculty: 'Fakulta informatiky a statistiky',
     });
     this.logger.log(`Retrieved ${courses.length} courses`);
 
-    // The same course code can appear more than once (offered under
-    // several programme types - regular/mba/kurzy/doktorská studia - in
-    // both semesters), and a single bulk INSERT ... ON CONFLICT can't
-    // update the same conflict target twice. Keep one row per code.
     const uniqueCourses = [
       ...new Map(courses.map((c) => [c.code, c])).values(),
     ];
