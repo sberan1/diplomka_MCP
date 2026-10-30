@@ -1,0 +1,1 @@
+ALTER TABLE "course_pages" ADD COLUMN "semester" text;

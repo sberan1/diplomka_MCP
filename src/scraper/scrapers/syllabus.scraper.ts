@@ -22,6 +22,7 @@ export interface SyllabusPageContent {
   assessmentMethods: string | null;
   specialRequirements: string | null;
   literature: string | null;
+  semester: string | null;
 }
 
 export interface SyllabusScraperResult {
@@ -59,6 +60,7 @@ const CS_LABELS: FieldLabels = {
   assessmentMethods: 'Způsoby a kritéria hodnocení',
   specialRequirements: 'Zvláštní podmínky a podrobnosti',
   literature: 'Literatura',
+  semester: 'Semestr',
 };
 
 const EN_LABELS: FieldLabels = {
@@ -74,6 +76,7 @@ const EN_LABELS: FieldLabels = {
   assessmentMethods: 'Assessment methods and criteria',
   specialRequirements: 'Special requirements and details',
   literature: 'Reading',
+  semester: 'Semester',
 };
 
 /**
@@ -151,6 +154,7 @@ export class SyllabusScraper extends BaseScraper<
       assessmentMethods: fields.assessmentMethods,
       specialRequirements: fields.specialRequirements,
       literature: fields.literature,
+      semester: fields.semester,
     };
   }
 }

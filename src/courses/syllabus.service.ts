@@ -37,11 +37,17 @@ const HASHED_FIELDS: (keyof SyllabusPageContent)[] = [
   'assessmentMethods',
   'specialRequirements',
   'literature',
+  'semester',
 ];
 
-export function hashPage(page: SyllabusPageContent): string {
+export function hashPage(
+  courseId: number,
+  language: 'cs' | 'en',
+  page: SyllabusPageContent,
+): string {
+  const values = HASHED_FIELDS.map((f) => page[f] ?? null);
   return createHash('sha256')
-    .update(JSON.stringify(HASHED_FIELDS.map((f) => page[f] ?? null)))
+    .update(JSON.stringify([courseId, language, ...values]))
     .digest('hex');
 }
 
@@ -105,7 +111,7 @@ export class SyllabusService {
     language: 'cs' | 'en',
     page: SyllabusPageContent,
   ): Promise<[typeof schema.coursePages.$inferSelect, boolean]> {
-    const contentHash = hashPage(page);
+    const contentHash = hashPage(courseId, language, page);
     const [existing] = await this.db
       .select()
       .from(schema.coursePages)

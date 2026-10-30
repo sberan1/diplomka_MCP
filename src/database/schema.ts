@@ -38,7 +38,7 @@ export const courses = pgTable('courses', {
 /**
  * A captured Czech or English syllabus page for a course. Every capture is
  * kept (archive); the latest capturedAt per (course, language) is the
- * current one. `contentHash` is the version identity: sha256 over every
+ * current one. `contentHash` is the version identity: sha256 over course id, language and every
  * content field (see SyllabusService.hashPage), unique - a refresh that
  * scrapes identical content reuses the existing row instead of storing a
  * duplicate.
@@ -64,6 +64,7 @@ export const coursePages = pgTable(
     assessmentMethods: text('assessment_methods'),
     specialRequirements: text('special_requirements'),
     literature: text('literature'),
+    semester: text('semester'),
     capturedAt: timestamp('captured_at', { withTimezone: true })
       .notNull()
       .defaultNow(),

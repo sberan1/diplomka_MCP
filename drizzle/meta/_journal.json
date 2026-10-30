@@ -64,6 +64,13 @@
       "when": 1789319638713,
       "tag": "0008_loud_nightmare",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1793367204380,
+      "tag": "0009_brainy_proudstar",
+      "breakpoints": true
     }
   ]
 }
