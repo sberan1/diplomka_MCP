@@ -7,11 +7,11 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD must be set}
       POSTGRES_DB: diplomka_mcp
-    ports:
-      # Bound to localhost only - do not expose Postgres publicly.
-      - '127.0.0.1:5432:5432'
+    # No published ports - reachable only from the internal db network.
     volumes:
       - postgres-data:/var/lib/postgresql/data
+    networks:
+      - db
     healthcheck:
       test: ['CMD-SHELL', 'pg_isready -U postgres']
       interval: 5s
@@ -26,10 +26,24 @@ services:
       DATABASE_URL: postgres://postgres:${POSTGRES_PASSWORD}@postgres:5432/diplomka_mcp
       MCP_AUTH_TOKEN: ${MCP_AUTH_TOKEN:?MCP_AUTH_TOKEN must be set}
     ports:
-      - '3000:3000'
+      # Host only - public HTTPS access goes through the ngrok tunnel.
+      - '127.0.0.1:3000:3000'
+    networks:
+      - db
+      - egress
     depends_on:
       postgres:
         condition: service_healthy
+
+networks:
+  db:
+    # No outbound traffic; shared by the database and the app only.
+    internal: true
+  egress:
+  # Outbound access for scraping the InSIS catalogue.
+  # reporting:
+  #   internal: true
+  #   Second network for the reporting tool, add it to postgres when chosen.
 
 volumes:
   postgres-data:
