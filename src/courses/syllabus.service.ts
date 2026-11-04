@@ -26,6 +26,7 @@ export interface SyllabusVersion {
 /** Fixed key order so the hash only depends on content, not object shape. */
 const HASHED_FIELDS: (keyof SyllabusPageContent)[] = [
   'name',
+  'nameInTeachingLanguage',
   'teachingLanguage',
   'ectsCredits',
   'completionForm',

@@ -1,0 +1,1 @@
+ALTER TABLE "course_pages" ADD COLUMN "name_in_teaching_language" text;

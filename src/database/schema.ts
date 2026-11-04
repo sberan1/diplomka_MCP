@@ -53,6 +53,7 @@ export const coursePages = pgTable(
     language: pageLanguage('language').notNull(),
     contentHash: text('content_hash').notNull().unique(),
     name: text('name').notNull(),
+    nameInTeachingLanguage: text('name_in_teaching_language'),
     teachingLanguage: text('teaching_language').notNull(),
     ectsCredits: integer('ects_credits').notNull(),
     completionForm: text('completion_form'),

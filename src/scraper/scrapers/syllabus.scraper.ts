@@ -11,6 +11,8 @@ export interface SyllabusScraperInput {
 
 export interface SyllabusPageContent {
   name: string;
+  /** "Název v jazyce výuky" / "Course title in language of instruction" - needed by rule R3. */
+  nameInTeachingLanguage: string | null;
   teachingLanguage: string;
   ectsCredits: number;
   completionForm: string | null;
@@ -49,6 +51,7 @@ type FieldLabels = Record<
 
 const CS_LABELS: FieldLabels = {
   name: 'Název česky',
+  nameInTeachingLanguage: 'Název v jazyce výuky',
   teachingLanguage: 'Jazyk výuky',
   ectsCredits: 'Počet přidělených ECTS kreditů',
   completionForm: 'Forma ukončení',
@@ -65,6 +68,7 @@ const CS_LABELS: FieldLabels = {
 
 const EN_LABELS: FieldLabels = {
   name: 'Course title in English',
+  nameInTeachingLanguage: 'Course title in language of instruction',
   teachingLanguage: 'Language of instruction',
   ectsCredits: 'Number of ECTS credits allocated',
   completionForm: 'Mode of completion',
@@ -143,6 +147,7 @@ export class SyllabusScraper extends BaseScraper<
 
     return {
       name: fields.name,
+      nameInTeachingLanguage: fields.nameInTeachingLanguage,
       teachingLanguage: fields.teachingLanguage,
       ectsCredits: Number(ectsMatch[0]),
       completionForm: fields.completionForm,
